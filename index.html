@@ -1,83 +1,175 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title></title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ases del Norte</title>
+  <meta name="description" content="Bono de bienvenida +10%. Ventaja real desde la primera carga. Seguridad, acreditación inmediata y soporte 24/7.">
+  <meta name="theme-color" content="#0B1026" />
+  <!-- Preload fondos para evitar CLS en mobile/desktop -->
+  <link rel="preload" as="image" href="ases-bg-mobile.svg" media="(max-width:768px)">
+  <link rel="preload" as="image" href="ases-bg-desktop.svg" media="(min-width:769px)">
+  <!-- Preload logo (reemplazá el archivo en la raíz) -->
+  <link rel="preload" as="image" href="logo-ases-del-norte.png">
+  <style>
+    :root{
+      --navy:#0B1026; --indigo:#1E0F5E; --violet:#6A00FF; --cyan:#00E5FF;
+      --pink:#FF3D81; --gold:#FFD54A; --white:#fff;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--white);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial;
+      background:var(--navy);
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:16px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand__name{font-weight:900;letter-spacing:.4px}
+    .brand__name span{color:var(--gold)}
 
-  <!-- Meta OG/Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="¡Activá tu cuenta y recibí un bono ahora!" />
-  <meta property="og:description" content="Hablá por WhatsApp con un cajero disponible y activá tu cuenta en minutos." />
-  <meta property="og:image" content="https://raw.githubusercontent.com/Favio1980/nebula/main/perro.jpeg" />
-  <meta property="og:url" content="https://rednebulaganamos.netlify.app/" />
+    .hero{position:relative;display:grid;place-items:center;min-height:92vh;overflow:hidden}
+    .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1;filter:saturate(1.15) brightness(1.05)}
+    .hero__content{text-align:center;padding:24px}
+    h1{font-size:clamp(28px,6vw,56px);margin:0 0 8px;font-weight:900;text-transform:uppercase;line-height:1.05}
+    h1 span{color:var(--gold);text-shadow:0 0 12px rgba(255,213,74,.55)}
+    .sub{font-size:clamp(14px,2.6vw,20px);opacity:.95;margin:.25rem auto 1rem;max-width:680px}
 
-  <!-- Meta Twitter -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content=" " />
-  <meta name="twitter:description" content=" " />
-  <meta name="twitter:image" content="https://via.placeholder.com/1x1.png?text=+" />
+    .btn{
+      display:inline-flex;gap:10px;align-items:center;justify-content:center;
+      background:linear-gradient(135deg,var(--violet),var(--pink));
+      border:0;color:#fff;padding:14px 22px;border-radius:14px;
+      font-weight:800;letter-spacing:.3px;text-decoration:none;box-shadow:0 10px 28px rgba(0,0,0,.35);
+      transition:.2s transform,.2s filter;will-change:transform,filter
+    }
+    .btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
+    .btn.ghost{background:transparent;border:2px solid rgba(255,255,255,.28)}
 
-  <!-- Meta estándar -->
-  <meta name="description" content=" " />
+    .mini{opacity:.9;margin:.6rem 0 1rem}
+    .bullets{list-style:none;padding:0;margin:12px auto 20px;display:grid;gap:6px}
+    .bullets li{background:rgba(255,255,255,.08);padding:10px 14px;border-radius:10px;backdrop-filter:blur(2px)}
 
-  <!-- Meta Pixel Code -->
-  <script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window, document,'script',
-  'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '1360284961962516');
-  fbq('track', 'PageView');
-  </script>
-  <noscript><img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=1360284961962516&ev=PageView&noscript=1"
-  /></noscript>
-  <!-- End Meta Pixel Code -->
+    /* Modal testimonios */
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;place-items:center;padding:16px}
+    .modal[aria-hidden="false"]{display:grid}
+    .modal__box{
+      background:rgba(11,16,38,.87);border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;max-width:860px;width:100%;padding:18px 18px 24px;
+      box-shadow:0 20px 60px rgba(0,0,0,.6);position:relative
+    }
+    .close{position:absolute;right:24px;top:14px;font-size:28px;background:transparent;color:#fff;border:0;cursor:pointer}
+    .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:18px}
+    .card{background:rgba(255,255,255,.07);border-radius:12px;padding:14px;min-height:120px}
 
-  <link rel="stylesheet" href="style.css">
+    /* Toasts */
+    .toasts{position:fixed;left:12px;bottom:12px;display:flex;flex-direction:column;gap:10px;z-index:10}
+    .toast{background:rgba(11,16,38,.92);color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:12px;
+      padding:10px 12px;box-shadow:0 10px 30px rgba(0,0,0,.5);animation:slidein .25s ease}
+    @keyframes slidein{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+    footer{text-align:center;opacity:.82;margin:20px 0}
+  </style>
 </head>
 <body>
-  <div class="overlay"></div>
-  <div class="container">
-    <div class="logo"></div>
-    <h1>¡Uníte a los que ya están ganando!</h1>
-    <h2>Hablá con nosotros por WhatsApp y activá tu cuenta en minutos</h2>
-    <div class="cta">
-      <a href="https://wa.me/3516375378?text=Hola%2C%20quiero%20comunicarme%20con%20un%20cajero%20disponible" 
-        class="cta-button" 
-        target="_blank" 
-        onclick="fbq('track', 'ContactarPorWhatsapp');">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
-        Contactar por WhatsApp
+  <header class="wrap">
+    <div class="brand">
+      <!-- LOGO: subir archivo como logo-ases-del-norte.png -->
+      <img src="logo-ases-del-norte.png" alt="Ases del Norte" width="88" height="88"
+           loading="eager" decoding="async" sizes="(max-width:600px) 72px, 88px"
+           style="border-radius:50%; object-fit:contain;">
+      <div class="brand__name">ASES <span>DEL NORTE</span></div>
+    </div>
+  </header>
+
+  <main class="hero wrap">
+    <picture>
+      <source media="(max-width: 768px)" srcset="ases-bg-mobile.svg">
+      <img class="bg" src="ases-bg-desktop.svg" alt="" fetchpriority="high" loading="eager" decoding="async">
+    </picture>
+
+    <div class="hero__content">
+      <h1>BONO DE BIENVENIDA <span>+10%</span></h1>
+      <p class="sub">Sin fichas gratis. Entrá con ventaja real desde tu primera carga.</p>
+
+      <!-- WhatsApp: reemplazá el número abajo -->
+      <a id="cta" class="btn" href="#" target="_blank" rel="noopener">
+        CREÁ TU USUARIO <span aria-hidden="true">🟢</span>
       </a>
+
+      <p class="mini">SIN LIMITE DE RETIRO</p>
+
+      <ul class="bullets" aria-label="Beneficios">
+        <li>Seguridad en cada jugada</li>
+        <li>Acreditación inmediata</li>
+        <li>Soporte 24/7</li>
+      </ul>
+
+      <button class="btn ghost" id="open-testimonials" aria-haspopup="dialog" aria-controls="testimonials">
+        Ver comentarios reales
+      </button>
     </div>
-    <div class="benefits">
-      <h3>Activá tu cuenta y recibí un bono de bienvenida exclusivo.</h3>
+  </main>
+
+  <!-- Modal de testimonios -->
+  <div id="testimonials" class="modal" aria-hidden="true">
+    <div class="modal__box" role="dialog" aria-modal="true" aria-labelledby="t-title">
+      <button class="close" id="close-testimonials" aria-label="Cerrar">×</button>
+      <h3 id="t-title">Opiniones de jugadores</h3>
+      <div id="testimonials-list" class="cards"></div>
     </div>
   </div>
 
-  <div class="footer">
-    <div class="footer-item">
-      <img src="https://img.icons8.com/ios-filled/24/ffffff/headset.png" alt="Atención" />
-      <span>Atención 24/7</span>
-    </div>
-    <div class="footer-item">
-      <img src="https://img.icons8.com/ios-filled/24/ffffff/money.png" alt="Pagos" />
-      <span>Pagos al instante</span>
-    </div>
-    <div class="footer-item">
-      <img src="https://img.icons8.com/ios-filled/24/ffffff/no-alcohol.png" alt="Responsable" />
-      <span>Jugá responsable (+18)</span>
-    </div>
-  </div>
+  <!-- Toasts (ventanas emergentes) -->
+  <div id="toasts" class="toasts" aria-live="polite" aria-atomic="true"></div>
 
-  <div class="notif" id="notifBox"></div>
+  <footer class="wrap">
+    <small>© Ases del Norte · Juego responsable 18+</small>
+  </footer>
 
-  <script src="script.js"></script>
+  <script>
+    // ——— Config —
+    const WHATSAPP_NUMBER = "5491171961646"; // <— CAMBIAR (sin +, con país y área)
+    const CTA = document.getElementById("cta");
+    CTA.href = `https://wa.me/${WHATSAPP_NUMBER}?text=Hola%20quiero%20mi%20bono%20de%20bienvenida`;
+
+    // Testimonios
+    const testimonials = [
+      {name:"Sofía M.", text:"Acreditaron en el acto. Jugué desde el celu sin drama."},
+      {name:"Diego R.", text:"El bono del 10% se notó. Buena atención."},
+      {name:"Carla L.", text:"Retiro rápido y seguro. Volvería."},
+      {name:"Nico P.", text:"Soporte por WhatsApp en 2 minutos. Excelente."},
+      {name:"Agus T.", text:"La mejor experiencia que tuve en un casino online."}
+    ];
+    const list = document.getElementById('testimonials-list');
+    list.innerHTML = testimonials.map(t => `
+      <div class="card">
+        <div style="color:#FFD54A" aria-hidden="true">★★★★★</div>
+        <div><strong>${t.name}</strong></div>
+        <p>${t.text}</p>
+      </div>`).join('');
+
+    // Modal accesible
+    const modal = document.getElementById('testimonials');
+    const openBtn = document.getElementById('open-testimonials');
+    const closeBtn = document.getElementById('close-testimonials');
+    openBtn.onclick = () => modal.setAttribute('aria-hidden','false');
+    closeBtn.onclick = () => modal.setAttribute('aria-hidden','true');
+    modal.addEventListener('click', e => { if(e.target === modal) modal.setAttribute('aria-hidden','true'); });
+    document.addEventListener('keydown', e => { if(e.key === 'Escape') modal.setAttribute('aria-hidden','true'); });
+
+    // Toasts (ventanas emergentes)
+    const toasts = document.getElementById('toasts');
+    function showToast(){
+      const t = testimonials[Math.floor(Math.random()*testimonials.length)];
+      const el = document.createElement('div');
+      el.className = 'toast';
+      el.textContent = `Nuevo comentario: ${t.name} — “${t.text}”`;
+      toasts.appendChild(el);
+      setTimeout(()=> el.remove(), 6000);
+    }
+    setTimeout(showToast, 2500);
+    setInterval(showToast, 12000);
+  </script>
 </body>
 </html>
