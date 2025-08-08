@@ -13,7 +13,6 @@
   :root{
     --navy:#0B1026; --black:#0A0A0A; --white:#fff;
     --fluorA:#FF8A00; --fluorB:#FF3D81; --fluorC:#00E5FF; --gold:#FFD54A;
-    --wa:#25D366; --wa-dark:#128C7E; /* WhatsApp */
   }
   *{box-sizing:border-box} html,body{height:100%}
   body{margin:0;color:var(--white);font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial;background:var(--navy)}
@@ -34,77 +33,80 @@
   @keyframes rise{from{transform:translateY(0) scale(1);opacity:.9} to{transform:translateY(-40px) scale(.4);opacity:0}}
   .sub{font-size:clamp(14px,2.7vw,19px); opacity:.95; margin:.25rem auto 1rem; max-width:680px}
 
-  /* ===== CTA WhatsApp + Slot Mini ===== */
-  .wa-cta{
-    --R:16px;
-    display:inline-flex; align-items:center; gap:10px;
-    padding:10px 14px; border-radius:var(--R);
-    color:#fff; text-decoration:none; font-weight:900; letter-spacing:.3px;
-    background:linear-gradient(180deg, var(--wa) 0%, var(--wa-dark) 100%);
-    border:1px solid rgba(0,0,0,.25);
-    box-shadow:0 10px 26px rgba(0,0,0,.35), inset 0 -2px 0 rgba(0,0,0,.2);
-    position:relative; overflow:hidden;
+  /* ===== CTA MINI (3 segmentos) ===== */
+  .cta-mini{
+    --R:14px;
+    display:inline-flex; align-items:stretch; justify-content:center; gap:0;
+    background:var(--black); border-radius:var(--R); padding:0; text-decoration:none; color:#fff;
+    border:1px solid rgba(255,255,255,.18); box-shadow:0 10px 28px rgba(0,0,0,.35);
+    position:relative; overflow:hidden; font-weight:900; letter-spacing:.3px;
   }
-  .wa-cta:active{transform:scale(.985)}
-  /* Aura verde perimetral */
-  .wa-cta::before{
-    content:""; position:absolute; inset:-5px; border-radius:calc(var(--R) + 6px);
-    background:radial-gradient(circle, rgba(37,211,102,.85) 0%, rgba(37,211,102,.35) 55%, rgba(37,211,102,0) 75%);
-    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 0);
-            mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 0);
-    filter:blur(.8px); pointer-events:none; z-index:0;
+  .seg{
+    position:relative; z-index:1; padding:10px 14px; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    border-right:1px solid rgba(255,255,255,.12);
+    font-size:clamp(12px,3.6vw,18px); min-width:92px;
+    box-shadow: inset 0 0 0 2px rgba(255,255,255,.04);
   }
-  /* Badge logo */
-  .wa-badge{
-    z-index:1; width:28px; height:28px; border-radius:999px; display:grid; place-items:center;
-    background:#fff2; border:1px solid rgba(255,255,255,.25);
-    box-shadow:inset 0 0 10px rgba(255,255,255,.1);
+  .seg:last-child{border-right:0}
+  .seg[data-accent="A"]{outline:2px solid var(--fluorA)}
+  .seg[data-accent="B"]{outline:2px solid var(--fluorB)}
+  .seg[data-accent="C"]{outline:2px solid var(--fluorC)}
+  /* Glow sutil por segmento */
+  .seg::after{
+    content:""; position:absolute; inset:0; border-radius:10px; pointer-events:none; mix-blend-mode:screen;
+    box-shadow:0 0 14px rgba(255,255,255,.06), inset 0 0 18px rgba(255,255,255,.05);
   }
-  /* Reels (3 segmentos) */
-  .wa-reels{z-index:1; display:grid; grid-template-columns:repeat(3,auto); gap:6px; align-items:center}
-  .reel{
-    min-width:86px; padding:8px 10px; border-radius:10px;
-    display:grid; place-items:center; background:rgba(0,0,0,.25);
-    border:1px solid rgba(255,255,255,.22); box-shadow:inset 0 0 0 2px rgba(255,255,255,.06);
-    font-size:clamp(12px,3.6vw,18px); position:relative; overflow:hidden; color:#fff;
-  }
-  .reel[data-i="0"]{outline:2px solid var(--fluorA)}
-  .reel[data-i="1"]{outline:2px solid var(--fluorB)}
-  .reel[data-i="2"]{outline:2px solid var(--fluorC)}
-  .reel.spinning{
-    background:
-      repeating-linear-gradient(0deg, rgba(255,255,255,.08) 0 2px, rgba(0,0,0,0) 2px 6px),
-      linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,0));
-  }
-  .reel .cell{transform-style:preserve-3d; will-change:transform}
-  .reel.spinning .cell{animation:spinY .16s linear infinite}
-  @keyframes spinY{to{transform:rotateY(360deg)}}
 
-  /* Click jackpot: flash + monedas/chispas */
-  .wa-cta.flash::after{
-    content:""; position:absolute; inset:0; border-radius:inherit; z-index:2;
-    background:radial-gradient(circle at center, rgba(255,215,0,.9) 0%, rgba(255,215,0,.12) 60%, transparent 100%);
+  /* Giro tipo arcade */
+  .seg .cell{transform-style:preserve-3d; will-change:transform}
+  .seg.spinning .cell{animation:spinY .14s linear infinite}
+  @keyframes spinY{0%{transform:rotateY(0)}100%{transform:rotateY(360deg)}}
+
+  .mini-note{font-size:12px; opacity:.8; margin-top:6px}
+
+  /* Click jackpot: flash + monedas + fuegos */
+  .cta-mini.flash::after{
+    content:""; position:absolute; inset:0; border-radius:inherit; z-index:3;
+    background:radial-gradient(circle at center, rgba(255,215,0,0.9) 0%, rgba(255,215,0,0.1) 60%, transparent 100%);
     animation:flashAnim .45s ease-out forwards;
   }
-  @keyframes flashAnim{to{opacity:0; transform:scale(1.6)}}
-  .coin,.spark{position:absolute; pointer-events:none; z-index:3; animation:fly .9s ease-out forwards}
-  .coin{width:12px; height:12px; border-radius:50%; background:radial-gradient(circle, #FFD54A 0%, #FF8A00 80%)}
-  .spark{width:3px; height:10px; border-radius:2px; background:linear-gradient(var(--c1), var(--c2))}
+  @keyframes flashAnim{0%{opacity:1; transform:scale(1)}100%{opacity:0; transform:scale(1.6)}}
+  .coin,.spark{
+    position:absolute; pointer-events:none; z-index:4;
+    animation:fly .9s ease-out forwards;
+  }
+  .coin{width:12px; height:12px; border-radius:50%;
+        background:radial-gradient(circle, #FFD54A 0%, #FF8A00 80%)}
+  .spark{width:3px; height:10px; border-radius:2px;
+         background:linear-gradient(var(--c1), var(--c2))}
   @keyframes fly{
     0%{opacity:1; transform:translate(0,0) scale(1)}
     100%{opacity:0; transform:translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(.6)}
   }
 
-  /* Features */
+  /* >>> Agregado: Borde exterior verde tipo WhatsApp <<< */
+  .cta-mini::after{
+    content:"";
+    position:absolute;
+    inset:-6px;
+    border-radius:calc(var(--R) + 6px);
+    background:radial-gradient(circle, rgba(37,211,102,0.85) 0%, rgba(37,211,102,0.35) 55%, rgba(37,211,102,0) 75%);
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 0);
+            mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 0);
+    filter: blur(1px);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  /* Features (opcionales, no tocadas) */
   .features{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; width:100%; max-width:760px; margin-top:10px}
   .feat{display:flex; align-items:center; justify-content:center; gap:8px; padding:10px 12px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); border-radius:12px}
 
   footer{text-align:center; opacity:.82; margin:14px 0 20px}
-
   @media (max-width:680px){
     .brand-logo{width:112px; height:112px}
-    .reel{min-width:78px; padding:7px 9px}
-    .wa-badge{width:26px;height:26px}
+    .seg{min-width:84px; padding:10px 12px; font-size:clamp(12px,4.2vw,17px)}
     .features{grid-template-columns:1fr}
   }
 </style>
@@ -122,25 +124,16 @@
       <h1>BONO DE BIENVENIDA</h1>
       <div class="flame-wrap"><div class="range flame">10% al 20%</div></div>
       <p class="sub">EN TU PRIMERA CARGA</p>
-      <p class="sub">Toca el botón y comunicate por WhatsApp</p>
+      <p class="sub">Toca el boton y comunicate por Whatsapp</p>
 
-      <!-- ===== CTA WhatsApp + tragamonedas (3 segmentos) ===== -->
-      <a id="waCta" class="wa-cta" href="#" target="_blank" rel="noopener"
-         aria-label="Contactar por WhatsApp para crear tu usuario">
-        <span class="wa-badge" aria-hidden="true">
-          <svg viewBox="0 0 32 32" width="18" height="18" aria-hidden="true">
-            <path fill="#25D366" d="M16 3C9.4 3 4 8.3 4 14.8c0 2.6.8 5.1 2.3 7.2L4 29l7.2-2.2c2 1.1 4.2 1.6 6.5 1.6 6.6 0 12-5.3 12-11.8S22.6 3 16 3z"/>
-            <path fill="#fff" d="M19.1 17.2c-.3-.2-1.7-.9-1.9-1s-.4-.2-.6.1c-.2.3-.7 1-.9 1.2-.2.2-.3.3-.6.1-1.7-.9-2.8-1.6-3.9-3.6-.3-.5.3-.5.8-1.8.1-.3 0-.5 0-.6 0-.2-.6-1.6-.8-2.2-.2-.6-.5-.5-.6-.5h-.5c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.9s1.2 3.3 1.4 3.6c.2.3 2.4 3.7 5.8 5.2.8.3 1.4.5 1.8.6.8.3 1.6.2 2.2.1.7-.1 2.1-.9 2.4-1.8.3-.9.3-1.6.2-1.8-.1-.2-.3-.3-.6-.5z"/>
-          </svg>
-        </span>
-        <span class="wa-reels">
-          <span class="reel" data-i="0" data-final="CREÁ"><span class="cell">⭐</span></span>
-          <span class="reel" data-i="1" data-final="TU"><span class="cell">🎰</span></span>
-          <span class="reel" data-i="2" data-final="USUARIO"><span class="cell">💥</span></span>
-        </span>
+      <!-- ===== CTA MINI (3 segmentos) ===== -->
+      <a id="ctaMini" class="cta-mini" href="#" target="_blank" rel="noopener" aria-label="Creá tu usuario por WhatsApp">
+        <div class="seg" data-final="CREÁ" data-accent="A"><span class="cell">⭐</span></div>
+        <div class="seg" data-final="TU"    data-accent="B"><span class="cell">🎰</span></div>
+        <div class="seg" data-final="USUARIO" data-accent="C"><span class="cell">💥</span></div>
       </a>
-      <div class="sub" style="opacity:.85;margin-top:6px">SIN LÍMITE DE RETIRO</div>
-      <!-- ===== /CTA ===== -->
+      <div class="mini-note">SIN LIMITE DE RETIRO</div>
+      <!-- ===== /CTA MINI ===== -->
 
       <div class="features" aria-label="Beneficios">
         <div class="feat">🛡️ Seguridad en cada jugada</div>
@@ -155,83 +148,106 @@
 <script>
   // WhatsApp (cambiar por tu número real)
   const WHATSAPP_NUMBER = "5490000000000"; // sin '+'
-  const waCta = document.getElementById("waCta");
-  waCta.href = `https://wa.me/${WHATSAPP_NUMBER}?text=Hola%20quiero%20mi%20bono%20de%20bienvenida`;
+  const cta = document.getElementById("ctaMini");
+  cta.href = `https://wa.me/${WHATSAPP_NUMBER}?text=Hola%20quiero%20mi%20bono%20de%20bienvenida`;
 
-  // Símbolos casino + aparición ocasional del logo WA dentro de los reels
+  // Símbolos para el giro (rápidos y frecuentes)
   const SYMS = ["🍒","💎","7️⃣","🃏","⭐","🎲","💥","🔔","🍀","💰","🎯","🧨"];
-  const WA_SVG = `
-    <svg viewBox="0 0 32 32" width="18" height="18" aria-hidden="true" style="vertical-align:-2px">
-      <path fill="#25D366" d="M16 3C9.4 3 4 8.3 4 14.8c0 2.6.8 5.1 2.3 7.2L4 29l7.2-2.2c2 1.1 4.2 1.6 6.5 1.6 6.6 0 12-5.3 12-11.8S22.6 3 16 3z"/>
-      <path fill="#fff" d="M19.1 17.2c-.3-.2-1.7-.9-1.9-1s-.4-.2-.6.1c-.2.3-.7 1-.9 1.2-.2.2-.3.3-.6.1-1.7-.9-2.8-1.6-3.9-3.6-.3-.5.3-.5.8-1.8.1-.3 0-.5 0-.6 0-.2-.6-1.6-.8-2.2-.2-.6-.5-.5-.6-.5h-.5c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.9s1.2 3.3 1.4 3.6c.2.3 2.4 3.7 5.8 5.2.8.3 1.4.5 1.8.6.8.3 1.6.2 2.2.1.7-.1 2.1-.9 2.4-1.8.3-.9.3-1.6.2-1.8-.1-.2-.3-.3-.6-.5z"/>
-    </svg>`;
 
-  function setRandomSymbol(el){
-    if (Math.random() < 0.18) {
-      el.innerHTML = WA_SVG;
+  // >>> Agregado: mini SVG de WhatsApp que aparece a veces durante el giro
+  const WA_SVG = `
+  <svg viewBox="0 0 32 32" width="18" height="18" aria-hidden="true" style="vertical-align:-2px">
+    <path fill="#25D366" d="M16 3C9.4 3 4 8.3 4 14.8c0 2.6.8 5.1 2.3 7.2L4 29l7.2-2.2c2 1.1 4.2 1.6 6.5 1.6 6.6 0 12-5.3 12-11.8S22.6 3 16 3z"/>
+    <path fill="#fff" d="M19.1 17.2c-.3-.2-1.7-.9-1.9-1s-.4-.2-.6.1c-.2.3-.7 1-.9 1.2-.2.2-.3.3-.6.1-1.7-.9-2.8-1.6-3.9-3.6-.3-.5.3-.5.8-1.8.1-.3 0-.5 0-.6 0-.2-.6-1.6-.8-2.2-.2-.6-.5-.5-.6-.5h-.5c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.9s1.2 3.3 1.4 3.6c.2.3 2.4 3.7 5.8 5.2.8.3 1.4.5 1.8.6.8.3 1.6.2 2.2.1.7-.1 2.1-.9 2.4-1.8.3-.9.3-1.6.2-1.8-.1-.2-.3-.3-.6-.5z"/>
+  </svg>`;
+
+  function setRandomSymbol(cell){
+    // ~20% de las veces, mostramos el logo de WhatsApp para reforzar destino
+    if (Math.random() < 0.2) {
+      cell.innerHTML = WA_SVG;
     } else {
-      el.textContent = SYMS[(Math.random()*SYMS.length)|0];
+      cell.textContent = SYMS[(Math.random()*SYMS.length)|0];
     }
   }
 
-  // Gira ~0.6s y muestra frase 0.8s; se repite; hover/touch re-dispara
-  let loopTimer = null, spinning = false, firstRun = false;
-  const reels = [...document.querySelectorAll(".reel")];
-
-  function startSpin(){
-    if (spinning) return; spinning = true;
-    reels.forEach(r=>{
-      r.classList.add("spinning");
-      const cell = r.querySelector(".cell");
-      if (r._int) clearInterval(r._int);
-      r._int = setInterval(()=> setRandomSymbol(cell), 55);
+  // ----- Loop de giro continuo: giran 0.6s, muestran texto 0.7s, repite -----
+  let loopTimer = null, spinning = false;
+  function setSegmentText(finalize = true){
+    document.querySelectorAll(".seg").forEach(seg=>{
+      const cell = seg.querySelector(".cell");
+      if (finalize) {
+        cell.textContent = seg.dataset.final;
+      } else {
+        setRandomSymbol(cell);
+      }
     });
+  }
+  function startSpin(){
+    if(spinning) return;
+    spinning = true;
+    document.querySelectorAll(".seg").forEach(seg=>{
+      seg.classList.add("spinning");
+      const cell = seg.querySelector(".cell");
+      if (seg._int) clearInterval(seg._int);
+      // más rápido y más seguido, usando símbolos o WA
+      seg._int = setInterval(()=>{ setRandomSymbol(cell); }, 50);
+    });
+    // parar todos juntos a los ~600ms y fijar texto final
     setTimeout(stopSpinToPhrase, 600);
   }
   function stopSpinToPhrase(){
-    reels.forEach(r=>{
-      r.classList.remove("spinning");
-      clearInterval(r._int);
-      r.querySelector(".cell").textContent = r.dataset.final;
+    document.querySelectorAll(".seg").forEach(seg=>{
+      seg.classList.remove("spinning");
+      clearInterval(seg._int);
+      seg.querySelector(".cell").textContent = seg.dataset.final;
     });
     spinning = false;
-    loopTimer = setTimeout(startSpin, 800);
+    // mostrar 700ms la frase y volver a girar
+    loopTimer = setTimeout(startSpin, 700);
   }
+  // Arranca cuando entra al viewport
+  let firstRun = false;
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting && !firstRun){
+        startSpin(); firstRun = true;
+      }
+    });
+  }, {threshold:0.6});
+  io.observe(cta);
+  // También en hover/touch vuelve a girar
+  cta.addEventListener("mouseenter", ()=> { if(!spinning) startSpin(); }, {passive:true});
+  cta.addEventListener("touchstart", ()=> { if(!spinning) startSpin(); }, {passive:true});
 
-  // Auto arranque cuando aparece
-  const io = new IntersectionObserver((es)=>es.forEach(e=>{
-    if(e.isIntersecting && !firstRun){ startSpin(); firstRun = true; }
-  }), {threshold:0.6});
-  io.observe(waCta);
-
-  waCta.addEventListener("mouseenter", ()=> { if(!spinning) startSpin(); }, {passive:true});
-  waCta.addEventListener("touchstart", ()=> { if(!spinning) startSpin(); }, {passive:true});
-
-  // Click: flash + chispas + monedas y abrir WhatsApp
-  waCta.addEventListener("click", (e)=>{
+  // ----- Click: detener loop, flash + fuegos + monedas, abrir WA luego -----
+  cta.addEventListener("click", (e)=>{
     e.preventDefault();
-    clearTimeout(loopTimer);
-    reels.forEach(r=>{ clearInterval(r._int); r.classList.remove("spinning"); r.querySelector(".cell").textContent = r.dataset.final; });
+    if(loopTimer) clearTimeout(loopTimer);
+    document.querySelectorAll(".seg").forEach(seg=>{ clearInterval(seg._int); seg.classList.remove("spinning"); });
+    setSegmentText(true); // asegurar frase armada
 
-    waCta.classList.add("flash");
-    fireworks(waCta, 18);
-    coins(waCta, 14);
+    // Flash + efectos
+    cta.classList.add("flash");
+    fireworks(cta, 18);   // fuegos / chispas
+    coins(cta, 14);       // monedas
 
+    // abrir WA después del show
     setTimeout(()=>{
-      window.open(waCta.href, "_blank");
-      waCta.classList.remove("flash");
+      window.open(cta.href, "_blank");
+      cta.classList.remove("flash");
+      // reanudar loop al volver (por si el usuario regresa)
       setTimeout(()=> startSpin(), 1200);
-    }, 650);
+    }, 700);
   });
 
-  // Efectos (monedas/chispas)
+  // ----- Efectos -----
   function coins(container, n=12){
     const rect = container.getBoundingClientRect();
     for(let i=0;i<n;i++){
       const el = document.createElement("div");
       el.className = "coin";
       const ang = Math.random()*Math.PI*2;
-      const dist = 60 + Math.random()*60;
+      const dist = 70 + Math.random()*70;
       el.style.setProperty("--tx", `${Math.cos(ang)*dist}px`);
       el.style.setProperty("--ty", `${Math.sin(ang)*dist - 10}px`);
       el.style.left = (rect.width/2 - 6) + "px";
@@ -250,7 +266,7 @@
       sp.style.setProperty("--c1", pair[0]);
       sp.style.setProperty("--c2", pair[1]);
       const ang = Math.random()*Math.PI*2;
-      const dist = 70 + Math.random()*70;
+      const dist = 80 + Math.random()*80;
       sp.style.setProperty("--tx", `${Math.cos(ang)*dist}px`);
       sp.style.setProperty("--ty", `${Math.sin(ang)*dist - 10}px`);
       sp.style.setProperty("--rot", `${(Math.random()*180-90)}deg`);
@@ -261,7 +277,7 @@
     }
   }
 
-  // Partículas del texto flame (sutiles)
+  // Partículas del texto flame (como antes, sutiles)
   const flameWrap = document.querySelector(".flame-wrap");
   setInterval(() => {
     const p = document.createElement("span");
