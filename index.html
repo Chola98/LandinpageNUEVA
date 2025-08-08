@@ -85,6 +85,20 @@
     100%{opacity:0; transform:translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(.6)}
   }
 
+  /* >>> Agregado: Borde exterior verde tipo WhatsApp <<< */
+  .cta-mini::after{
+    content:"";
+    position:absolute;
+    inset:-6px;
+    border-radius:calc(var(--R) + 6px);
+    background:radial-gradient(circle, rgba(37,211,102,0.85) 0%, rgba(37,211,102,0.35) 55%, rgba(37,211,102,0) 75%);
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 0);
+            mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 0);
+    filter: blur(1px);
+    pointer-events:none;
+    z-index:0;
+  }
+
   /* Features (opcionales, no tocadas) */
   .features{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; width:100%; max-width:760px; margin-top:10px}
   .feat{display:flex; align-items:center; justify-content:center; gap:8px; padding:10px 12px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); border-radius:12px}
@@ -140,12 +154,32 @@
   // Símbolos para el giro (rápidos y frecuentes)
   const SYMS = ["🍒","💎","7️⃣","🃏","⭐","🎲","💥","🔔","🍀","💰","🎯","🧨"];
 
+  // >>> Agregado: mini SVG de WhatsApp que aparece a veces durante el giro
+  const WA_SVG = `
+  <svg viewBox="0 0 32 32" width="18" height="18" aria-hidden="true" style="vertical-align:-2px">
+    <path fill="#25D366" d="M16 3C9.4 3 4 8.3 4 14.8c0 2.6.8 5.1 2.3 7.2L4 29l7.2-2.2c2 1.1 4.2 1.6 6.5 1.6 6.6 0 12-5.3 12-11.8S22.6 3 16 3z"/>
+    <path fill="#fff" d="M19.1 17.2c-.3-.2-1.7-.9-1.9-1s-.4-.2-.6.1c-.2.3-.7 1-.9 1.2-.2.2-.3.3-.6.1-1.7-.9-2.8-1.6-3.9-3.6-.3-.5.3-.5.8-1.8.1-.3 0-.5 0-.6 0-.2-.6-1.6-.8-2.2-.2-.6-.5-.5-.6-.5h-.5c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.9s1.2 3.3 1.4 3.6c.2.3 2.4 3.7 5.8 5.2.8.3 1.4.5 1.8.6.8.3 1.6.2 2.2.1.7-.1 2.1-.9 2.4-1.8.3-.9.3-1.6.2-1.8-.1-.2-.3-.3-.6-.5z"/>
+  </svg>`;
+
+  function setRandomSymbol(cell){
+    // ~20% de las veces, mostramos el logo de WhatsApp para reforzar destino
+    if (Math.random() < 0.2) {
+      cell.innerHTML = WA_SVG;
+    } else {
+      cell.textContent = SYMS[(Math.random()*SYMS.length)|0];
+    }
+  }
+
   // ----- Loop de giro continuo: giran 0.6s, muestran texto 0.7s, repite -----
   let loopTimer = null, spinning = false;
   function setSegmentText(finalize = true){
     document.querySelectorAll(".seg").forEach(seg=>{
       const cell = seg.querySelector(".cell");
-      cell.textContent = finalize ? seg.dataset.final : SYMS[(Math.random()*SYMS.length)|0];
+      if (finalize) {
+        cell.textContent = seg.dataset.final;
+      } else {
+        setRandomSymbol(cell);
+      }
     });
   }
   function startSpin(){
@@ -155,8 +189,8 @@
       seg.classList.add("spinning");
       const cell = seg.querySelector(".cell");
       if (seg._int) clearInterval(seg._int);
-      // más rápido y más seguido
-      seg._int = setInterval(()=>{ cell.textContent = SYMS[(Math.random()*SYMS.length)|0]; }, 50);
+      // más rápido y más seguido, usando símbolos o WA
+      seg._int = setInterval(()=>{ setRandomSymbol(cell); }, 50);
     });
     // parar todos juntos a los ~600ms y fijar texto final
     setTimeout(stopSpinToPhrase, 600);
