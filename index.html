@@ -11,47 +11,82 @@
 <link rel="preload" as="image" href="logo-ases-del-norte.png">
 <style>
   :root{
-    --navy:#0B1026; --black:#0A0A0A; --white:#fff;
-    --greenLED:#25D366;
+    --navy:#0B1026; --black:#0A0A0A; --white:#fff; --gold:#FFD54A;
+    --wa:#25D366; --waDark:#128C7E;
   }
   *{box-sizing:border-box} html,body{height:100%}
   body{margin:0;color:var(--white);font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial;background:var(--navy)}
   .hero{position:relative; min-height:100svh; display:grid; place-items:center; overflow:hidden}
-  .bg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-1;}
+  .bg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-1; filter:saturate(1.08)}
   .stack{display:flex; flex-direction:column; align-items:center; gap:14px; padding:20px 16px 28px; text-align:center; width:min(100%, 980px); margin-inline:auto}
   .brand-logo{width:128px; height:128px; object-fit:contain; border-radius:50%; display:block}
 
-  h1{font-size:clamp(28px,7vw,56px); margin:8px 0 0; font-weight:900; text-transform:uppercase;}
-  .range{font-size:clamp(28px,10vw,72px); font-weight:900; margin:2px 0 8px;}
+  h1{font-size:clamp(28px,7vw,56px); margin:8px 0 0; font-weight:900; text-transform:uppercase; line-height:1.05}
+  .range{font-size:clamp(28px,10vw,72px); font-weight:900; margin:2px 0 8px; line-height:1}
+  .flame{
+    color:transparent;
+    background:linear-gradient(180deg,#fff8d6 5%, #ffd54a 35%, #ff9e00 65%, #ff3d00 95%);
+    -webkit-background-clip:text; background-clip:text;
+    text-shadow:0 0 8px rgba(255,165,0,.7),0 0 18px rgba(255,94,0,.45),0 0 28px rgba(255,94,0,.25);
+    animation:flicker 1s ease-in-out infinite alternate;
+  }
+  @keyframes flicker{0%{filter:brightness(1)}100%{filter:brightness(1.12)}}
+  .flame-wrap{position:relative; display:inline-block}
+  .particle{position:absolute; width:4px; height:4px; background:var(--gold);
+    border-radius:50%; opacity:.85; animation:rise 2s linear infinite}
+  @keyframes rise{from{transform:translateY(0) scale(1);opacity:.9} to{transform:translateY(-40px) scale(.4);opacity:0}}
   .sub{font-size:clamp(14px,2.7vw,19px); opacity:.95; margin:.25rem auto 1rem; max-width:680px}
 
-  /* ===== CTA WhatsApp minimalista ===== */
+  /* ===== CTA WhatsApp negro minimalista con LED + rayos ===== */
   .cta-whatsapp{
-    display:inline-flex; align-items:center; justify-content:center;
-    gap:10px; padding:12px 24px;
-    background:var(--black); color:white;
-    border-radius:12px;
-    text-decoration:none; font-weight:700;
-    font-size:1rem; position:relative; overflow:hidden;
+    position:relative; display:inline-flex; align-items:center; gap:10px;
+    padding:12px 20px; border-radius:12px; text-decoration:none;
+    background:#000; color:#fff; font-weight:800; letter-spacing:.2px;
+    border:1px solid rgba(255,255,255,.12); box-shadow:0 10px 26px rgba(0,0,0,.35);
+    overflow:hidden;
   }
-  .cta-whatsapp svg{
-    width:20px; height:20px; fill:#fff;
-  }
-  /* LED verde brillante con rayos */
+  .cta-whatsapp .wa-ico{width:20px;height:20px;flex:0 0 auto}
+  /* LED verde (halo) */
   .cta-whatsapp::before{
-    content:""; position:absolute; inset:-4px;
-    border-radius:14px;
-    background:radial-gradient(circle, rgba(37,211,102,1) 0%, rgba(37,211,102,0.5) 40%, transparent 80%);
-    animation:ledPulse 1.5s infinite alternate;
-    z-index:-1;
-    filter:blur(2px);
+    content:""; position:absolute; inset:-5px; border-radius:16px; z-index:-1;
+    background:radial-gradient(circle, rgba(37,211,102,1) 0%, rgba(37,211,102,.55) 40%, rgba(37,211,102,0) 80%);
+    filter:blur(1.6px); animation:ledPulse 1.8s ease-in-out infinite;
   }
   @keyframes ledPulse{
-    0%{box-shadow:0 0 8px var(--greenLED), 0 0 16px var(--greenLED), 0 0 24px var(--greenLED);}
-    100%{box-shadow:0 0 16px var(--greenLED), 0 0 28px var(--greenLED), 0 0 40px var(--greenLED);}
+    0%{box-shadow:0 0 10px var(--wa),0 0 18px var(--wa)}
+    100%{box-shadow:0 0 18px var(--wa),0 0 34px var(--wa)}
   }
+  /* Rayos eléctricos alrededor (dashes en rotación + parpadeo) */
+  .cta-whatsapp::after{
+    content:""; position:absolute; inset:-8px; border-radius:18px; pointer-events:none;
+    background:
+      repeating-conic-gradient(from 0deg,
+        rgba(37,211,102,.95) 0 4deg, transparent 4deg 12deg);
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 0);
+            mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 0);
+    animation:spinArc 2.2s linear infinite, jitter 1.6s steps(2,end) infinite;
+    filter:blur(.6px);
+  }
+  @keyframes spinArc{to{transform:rotate(360deg)}}
+  @keyframes jitter{50%{opacity:.55} 100%{opacity:1}}
+
+  /* Features */
+  .features{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; width:100%; max-width:760px; margin-top:10px}
+  .feat{display:flex; align-items:center; justify-content:center; gap:8px; padding:10px 12px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); border-radius:12px}
 
   footer{text-align:center; opacity:.82; margin:14px 0 20px}
+
+  /* Partículas del click (monedas y chispas) */
+  .coin,.spark{position:absolute; pointer-events:none; z-index:20}
+  .coin{width:12px; height:12px; border-radius:50%;
+        background:radial-gradient(circle, #FFD54A 0%, #FF8A00 80%)}
+  .spark{width:3px; height:10px; border-radius:2px;
+         background:linear-gradient(#FFE082,#FF8A00)}
+
+  @media (max-width:680px){
+    .brand-logo{width:112px; height:112px}
+    .features{grid-template-columns:1fr}
+  }
 </style>
 </head>
 <body>
@@ -65,87 +100,99 @@
       <img src="logo-ases-del-norte.png" alt="Ases del Norte" class="brand-logo">
 
       <h1>BONO DE BIENVENIDA</h1>
-      <div class="range">10% al 20%</div>
+      <div class="flame-wrap"><div class="range flame">10% al 20%</div></div>
       <p class="sub">EN TU PRIMERA CARGA</p>
-      <p class="sub">Toca el botón y comunicate por WhatsApp</p>
+      <p class="sub">Tocá el botón y comunicate por WhatsApp</p>
 
-      <!-- CTA WhatsApp -->
-      <a id="ctaBtn" class="cta-whatsapp" href="#" target="_blank" rel="noopener">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+      <!-- ===== CTA ===== -->
+      <a id="ctaBtn" class="cta-whatsapp" href="#" target="_blank" rel="noopener" aria-label="Crear usuario por WhatsApp">
+        <svg class="wa-ico" viewBox="0 0 32 32" aria-hidden="true">
           <path fill="#25D366" d="M16 3C9.4 3 4 8.3 4 14.8c0 2.6.8 5.1 2.3 7.2L4 29l7.2-2.2c2 1.1 4.2 1.6 6.5 1.6 6.6 0 12-5.3 12-11.8S22.6 3 16 3z"/>
           <path fill="#fff" d="M19.1 17.2c-.3-.2-1.7-.9-1.9-1s-.4-.2-.6.1c-.2.3-.7 1-.9 1.2-.2.2-.3.3-.6.1-1.7-.9-2.8-1.6-3.9-3.6-.3-.5.3-.5.8-1.8.1-.3 0-.5 0-.6 0-.2-.6-1.6-.8-2.2-.2-.6-.5-.5-.6-.5h-.5c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.9s1.2 3.3 1.4 3.6c.2.3 2.4 3.7 5.8 5.2.8.3 1.4.5 1.8.6.8.3 1.6.2 2.2.1.7-.1 2.1-.9 2.4-1.8.3-.9.3-1.6.2-1.8-.1-.2-.3-.3-.6-.5z"/>
         </svg>
         CREÁ TU USUARIO
       </a>
-      <div class="mini-note">SIN LÍMITE DE RETIRO</div>
+      <div class="sub" style="opacity:.85;margin-top:6px">SIN LÍMITE DE RETIRO</div>
+      <!-- ===== /CTA ===== -->
+
+      <div class="features" aria-label="Beneficios">
+        <div class="feat">🛡️ Seguridad en cada jugada</div>
+        <div class="feat">⚡ Acreditación inmediata</div>
+        <div class="feat">🎧 Soporte 24/7</div>
+      </div>
     </div>
   </main>
 
   <footer><small>© Ases del Norte · Juego responsable 18+</small></footer>
 
 <script>
-  const WHATSAPP_NUMBER = "5490000000000"; // cambiar
+  // Configurá tu WhatsApp
+  const WHATSAPP_NUMBER = "5490000000000"; // sin '+'
   const cta = document.getElementById("ctaBtn");
   cta.href = `https://wa.me/${WHATSAPP_NUMBER}?text=Hola%20quiero%20mi%20bono%20de%20bienvenida`;
 
-  cta.addEventListener("click", (e) => {
+  // Click: fuegos + monedas y abrir después de 0.8s
+  cta.addEventListener("click", (e)=>{
     e.preventDefault();
-    fireworks(cta, 18);
-    coins(cta, 14);
-    setTimeout(() => {
-      window.open(cta.href, "_blank");
-    }, 800);
+    explotar(cta);
+    setTimeout(()=> window.open(cta.href, "_blank"), 800);
   });
+
+  function explotar(container){
+    fireworks(container, 18);
+    coins(container, 14);
+  }
 
   function coins(container, n=12){
     const rect = container.getBoundingClientRect();
     for(let i=0;i<n;i++){
       const el = document.createElement("div");
-      el.style.position = "absolute";
-      el.style.width = "12px";
-      el.style.height = "12px";
-      el.style.borderRadius = "50%";
-      el.style.background = "radial-gradient(circle, #FFD54A 0%, #FF8A00 80%)";
+      el.className = "coin";
       el.style.left = (rect.width/2 - 6) + "px";
       el.style.top  = (rect.height/2 - 6) + "px";
-      el.style.pointerEvents = "none";
-      el.style.zIndex = 9999;
+      container.appendChild(el);
+
       const ang = Math.random()*Math.PI*2;
       const dist = 70 + Math.random()*70;
       el.animate([
         {transform:`translate(0,0) scale(1)`, opacity:1},
         {transform:`translate(${Math.cos(ang)*dist}px, ${Math.sin(ang)*dist}px) scale(.6)`, opacity:0}
       ], {duration:900, easing:"ease-out"});
-      container.appendChild(el);
-      setTimeout(()=>el.remove(),900);
+      setTimeout(()=> el.remove(), 900);
     }
   }
+
   function fireworks(container, n=16){
     const rect = container.getBoundingClientRect();
-    const colors = [["#FF8A00","#FFD54A"],["#FF3D81","#FFC0DA"],["#00E5FF","#B3F7FF"]];
     for(let i=0;i<n;i++){
       const sp = document.createElement("div");
-      sp.style.position = "absolute";
-      sp.style.width = "3px";
-      sp.style.height = "10px";
-      sp.style.borderRadius = "2px";
-      const pair = colors[i % colors.length];
-      sp.style.background = `linear-gradient(${pair[0]}, ${pair[1]})`;
+      sp.className = "spark";
       sp.style.left = (rect.width/2 - 1.5) + "px";
       sp.style.top  = (rect.height/2 - 5) + "px";
-      sp.style.pointerEvents = "none";
-      sp.style.zIndex = 9999;
+      container.appendChild(sp);
+
       const ang = Math.random()*Math.PI*2;
-      const dist = 80 + Math.random()*80;
-      const rot = (Math.random()*180-90);
+      const dist = 80 + Math.random()*90;
+      const rot = (Math.random()*180 - 90);
       sp.animate([
         {transform:`translate(0,0) rotate(${rot}deg)`, opacity:1},
         {transform:`translate(${Math.cos(ang)*dist}px, ${Math.sin(ang)*dist}px) rotate(${rot}deg)`, opacity:0}
       ], {duration:900, easing:"ease-out"});
-      container.appendChild(sp);
-      setTimeout(()=>sp.remove(),900);
+      setTimeout(()=> sp.remove(), 900);
     }
   }
+
+  // Partículas del texto “flame” (sutiles)
+  const flameWrap = document.querySelector(".flame-wrap");
+  setInterval(() => {
+    const p = document.createElement("span");
+    p.className = "particle";
+    p.style.left = `${Math.random() * 100}%`;
+    p.style.animationDuration = `${1.5 + Math.random()}s`;
+    p.style.background = Math.random() > 0.5 ? "#FFD54A" : "#FFB300";
+    flameWrap.appendChild(p);
+    setTimeout(() => p.remove(), 2000);
+  }, 300);
 </script>
 </body>
 </html>
